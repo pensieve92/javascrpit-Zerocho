@@ -77,7 +77,7 @@ for문 안에 비동기 함수가 들어있는 경우 클로저 문제가 생김
 공.style.marginRight = '10px';
 ```
 
-다른 부분은 매개변수로, 겹치는 부분은 함수로
+다른 부분은 매개변수로 받고, 겹치는 부분은 함수 내부로 묶는다.  
 
 ## 6-6. 로또추첨기 마무리 & querySelector  
 ```javascript
@@ -88,9 +88,9 @@ for문 안에 비동기 함수가 들어있는 경우 클로저 문제가 생김
 
 querySelector('#결과창');
 querySelector('.보너스');
-css로 사용할 수 있다.
+css 형식으로 사용할 수 있다.
 querySelector추천
 
-html element요소, nodeList >> 중급, 실무에선 거의.. 안씀 
+html element요소, nodeList >> 중급, 실무에선 거의.. 안씀  
 
 
