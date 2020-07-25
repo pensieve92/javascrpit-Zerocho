@@ -212,8 +212,65 @@ documemt.querSelector('#exec').addEventListener('click',function(){
 })
 ```
 ## 8-7. 스코프  
+
+펑션(함수) 스코프 : 함수안에 정의된 변수는 함수 밖으로 나올 수 없다.  
+
+```javascript
+// 변수명이 같을 경우
+var x = 'global';
+function ex(){  
+    var x = 'local';    // 함수 밖으로 빠져나갈 수 없다
+    x = 'change';       
+}
+ex();       // 
+alert(x);   // global
+```
 ## 8-8. 스코프 체인  
+함수 내에 없으면, 그 위의 함수, 위 함수도 없으면 전체범위헤서 변수를 찾는다.  
+스코프 간의 상하관계를 스코프 체인이라 한다.  
+```javascript
+var name = 'zero';
+function outer(){  
+    console.log('외부', name);      // 1. zero
+    function innner() {
+        var enemy = 'nero';
+        console.log('내부', name);  // 3. zero
+    }
+    inner();                        // 2. inner()
+}
+outer();       
+console.log(enemy);                 // not defined 
+``` 
+
 ## 8-9. 렉시컬 스코프  
+렉시컬 스코프 == static 스코프 == 정적 스코프 : 코드가 적힌 순간 스코프가 정해짐  
+스코프를 통해서 비밀 변수를 설정 (즉시실행)
+
+```javascript
+var name = 'zero';
+function log() {
+    console.log(name);
+}   
+
+function wrapper() {
+    name = 'nero';
+    log();
+}
+wrapper();      // nero  
+```
+
+```javascript
+var name = 'zero';
+function log() {
+    console.log(name);  // 아무런 영향을 받지 않는다
+}   
+
+function wrapper() {
+    var name = 'nero';
+    log();  
+}
+wrapper();     // zero
+```
 ## 8-10. 클로저  
 ## 8-11. 클로저 문제 해결법  
 ## 8-12. 주변 칸 한 번에 열기(재귀)  
