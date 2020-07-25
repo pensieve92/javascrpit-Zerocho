@@ -21,6 +21,7 @@ var 필 =  후보군.fill(); // undefined 상태가 됨,
 [1,2,3,4,5]
 // mapping, 맵 1:1로 맵핑하려면 map()를 사용
 // 새로운 배열을 받아온다.
+// map을 forEach로 ?? : return이 있는 경우에는 forEach로 하면 매우 복잡해집니다.
 var 맵 = 필.map(function (요소, 인덱스) {
     return 인덱스 + 1;   
 });
@@ -35,6 +36,7 @@ while(후보군.length > 0 ){                // O
     셔플.push(이동값);
 }   
 ```
+
 
 ## 6-3. 배열 slice & sort  
 slice(시작, 끝)  끝은 미포함
