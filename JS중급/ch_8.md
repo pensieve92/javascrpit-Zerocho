@@ -199,6 +199,7 @@ documemt.querSelector('#exec').addEventListener('click',function(){
         dataset[줄][칸-1], dataset[줄][칸+1],            
     ];
     // concat은 배열과 배열을 합쳐서 "새로운" 배열을 만들어준다.
+    // 배열[-1]은 항상 undefined입니다. 배열[-1][0]은 undefined의 [0]을 접근하는 것이라 에러가 납니다.
     if(dataset[줄-1]){
         주변 = 주변.concat([ dataset[줄-1][칸-1], dataset[줄-1][칸], dataset[줄-1][칸+1] ])     
     }else if(ataset[줄+1]){
@@ -272,10 +273,175 @@ function wrapper() {
 wrapper();     // zero
 ```
 ## 8-10. 클로저  
-## 8-11. 클로저 문제 해결법  
-## 8-12. 주변 칸 한 번에 열기(재귀)  
-## 8-13. 재귀 코드 효율 개선하기  
-## 8-14. 에러 잡아내기  
-## 8-15. 데이터 딕셔너리로 정리  
-## 8-16. 남은 버그들 해결하기  
+클로저 :  함수와 함수가 선언된 어휘적(렉시컬) 환경의 조합 (MDM)  
+클로저를 이루다 : 변수를 공유하다?  
 
+클로저 관계
+```javascript
+// 전역범위와 log()가 클로저 관계이다.
+var name = 'zero';
+function log() {
+    console.log(name);
+}   
+
+function wrapper() {
+    var name = 'nero';
+    log();  
+}
+wrapper();
+```
+
+반복문과 비동기 함수
+```javascript
+// 반복문과 비동기 함수가 만날때 클로저 문제가 자주발생한다.
+
+                                // 예상 시나리오
+for( var i = 0; i< 100; i++){   // 3. 전역 범위에서 i를 찾는다. for문의 i
+    setTimeout(function(){      // 2. 익명함수 내부에서 i가 있나 ?? NO
+        console.log(i);         // 1. i가 머지?                     
+    }, i *1000)
+}
+                                // 결과 100 만 찍힘
+```
+
+반복문 결과  
+비동기 함수가 for문의 i의 마지막값을 사용한다.  
+for문은 callstack에서 이미 다 돌고 i가 증가된 상태로 setTimeout이 호출되서 그런거임  
+변수가 렉시컬 스코프 안에 없으면 스코프체인 , 비동기 함수 안에 내용은 실행되는 순간에 결정된다.  
+```javascript
+// javascript 해석  
+// setTimeout 비동기 함수 내부의 i는 i이고, 딜레이 시간 변수에 i는 반복문에 의해 1씩 증가된 값이다.
+// 비동기 함수가 실행되기 전까지는 그 내용을 그대로 가지고 있다.
+// 함수 안의 변수는 실행될때 값이 결정됨
+setTimeout(function(){      
+    console.log(i);         
+}, 0 * 1000)
+
+setTimeout(function(){      
+    console.log(i);         
+}, 1 * 1000)
+
+...
+
+setTimeout(function(){      
+    console.log(i);         
+}, 98 * 1000)
+
+setTimeout(function(){      
+    console.log(i);         
+}, 99 * 1000)
+
+```
+setTimeout(function(), 0)
+```javascript
+// 0초 이지만 i= 100이다.
+setTimeout(function(){      
+    console.log(i);  //100
+}, 0 * 1000)         // o초
+```
+
+## 8-11. 클로저 문제 해결법  
+클로저 문제 해결 - 즉시실행함수  
+```javascript                            
+for( var i = 0; i< 100; i++){   
+    setTimeout(function(){      
+        console.log(i);         
+    }, i * 1000)
+}
+
+// 클로저 문제 해결
+for( var i = 0; i< 100; i++){   
+    function 클로저(j){
+        setTimeout(function(){      
+            console.log(J);         
+        }, j * 1000)
+    }
+    클로저(i);    
+}
+
+// 클로저 문제 해결 - 즉시 실행함수
+for( var i = 0; i< 100; i++){   
+    (function 클로저(j){
+        setTimeout(function(){      
+            console.log(J);         
+        }, j * 1000)
+    })(i)
+    
+}
+```
+
+## 8-12. 주변 칸 한 번에 열기(재귀)  
+재귀함수 : 반복문을 함수로 표현
+```javascript
+function 재귀함수(숫자) {
+    console.log(숫자);
+    if(숫자 < 5){
+        재귀함수(숫자 + 1);    
+    }    
+}
+
+재귀함수(1); // 무한반복(stackoverFlow) >> if문으로 제어 
+```
+
+```javascript
+
+...
+
+//  undefined, 0, null을 제거하는 코드
+// 주변칸.filter(function(v){ return !!v; }) 
+주변칸.filter(function(v){ return !!v; }).forEach(function (옆칸){
+    옆칸.click();
+})
+// 재귀함수를 사용하면 실행하는데 시간이 오래걸릴 수 있다.
+
+...
+
+```
+## 8-13. 재귀 코드 효율 개선하기  
+열린 칸들이 반복적으로 열림 문제
+```javascript
+
+... 
+
+주변칸.filter(function(v){ return !!v; }).forEach(function (옆칸){
+    // 조건추가
+    if(dataset[옆칸줄][옆칸칸] !== 1){
+        옆칸.click();
+    }
+})
+
+...
+
+```
+재귀함수는 사람이 이해하기 쉽고, 컴퓨터가 이해하기 어려움
+반복문은 사람이 이해하기 어렵고, 컴퓨터가 이해하기 쉬움
+
+## 8-14. 에러 잡아내기  
+```javascript
+// || 주변지뢰개수가 거짓값이면 뒤에 꺼('')를 대신써라
+// 거짓인값 : '', 0, NaN, null, undefined, false
+e.currentTarget.textContent = 주변지뢰개수 || '';
+```
+중단플래그 : 코드의 흐름을 제어
+```javascript
+td.addEventListener('click', function(e){
+    if(중단플래그){
+        return; // 함수의 실행을 중간에 끊을 수 있다.
+    }
+})
+```
+
+## 8-15. 데이터 딕셔너리로 정리 
+```javascript
+var 코드표 = {
+    옆칸 : -1,
+    물음표: -2,
+    깃발: -3,
+    깃발지뢰: -4,
+    물음표지뢰: -5,
+    지뢰: 1,
+    보통칸: 0
+}
+```
+
+## 8-16. 남은 버그들 해결하기  
