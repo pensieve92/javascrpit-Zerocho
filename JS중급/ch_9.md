@@ -71,5 +71,13 @@ e();
 a();
 ```
 ## 9-4. 타이머 제거  
+
+```javascript
+var 타임아웃;
+타임아웃 = setTimeout(function(){
+
+})
+clearTimeout(타임아웃);
+```
 ## 9-5. 재귀, 비동기와 호출 스택
 
