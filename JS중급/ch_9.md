@@ -81,3 +81,23 @@ clearTimeout(타임아웃);
 ```
 ## 9-5. 재귀, 비동기와 호출 스택
 
+```javascript
+function a() {
+    setTimeout(function(){  
+        a();                
+    }, 0);                  
+}
+
+a();                        
+```
+push a()  -> push setTimeout() -> put setTimeout() -> put a()  
+0초후  
+push 익명함수() -> push a() -> push setTimout() -> put setTimeout() -> put a() -> put 익명함수()  
+0초후  
+push 익명함수() -> push a() -> push setTimout() -> put setTimeout() -> put a() -> put 익명함수()  
+
+... 반복  
+    
+0초후 익명함수가 저장은 [백그라운드]와 [이벤트 루프]에서 알아본다.  
+
+인터프리터가 해석하듯 머리로 해석할 수 있어야한다.  
